@@ -1,0 +1,22 @@
+{
+  "name": "kermodei-discord",
+  "version": "0.1.0",
+  "description": "A Discord Bot",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Discord",
+    "Bot"
+  ],
+  "author": "Julian Webb",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "tweetnacl": "^1.0.3"
+  }
+}

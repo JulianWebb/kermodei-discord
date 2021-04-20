@@ -1,0 +1,15 @@
+{
+    "botName" : "kermodei",
+    "environment" : "development",
+    "logger" : {
+        "enabled" : true,
+        "timestamp": {
+            "enabled" : true,
+            "iso8601" : true
+        },
+        "webhook" : {
+            "enabled" : false,
+            "url" : "https://discord.com/api/webhooks/833955343285092384/fCCy2_lks6sD4OZs81EOBwP9qyBwjdPBPkKp8lp0thL24_gLrkf3sAJJxeEJawjzFBq-"
+        }
+    }
+}
