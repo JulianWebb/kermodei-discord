@@ -28,7 +28,7 @@ function Initialization(discordClient) {
         eventFiles.forEach(eventFile => {
             if (eventFile.endsWith('.event.js')) {
                 discordClient.logger.log(`Loading event from ${eventFile}`);
-                let event = require(eventFolder + eventFolder);
+                let event = require(eventFolder + eventFile);
                 discordClient.on(event.type, event.callback.bind(null, discordClient));
             }
         });
