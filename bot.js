@@ -3,25 +3,25 @@ const fileSystem = require('fs');
 const express = require('express');
 
 const Discord = require('discord.js');
-const discordClient = new Discord.client();
+const discordClient = new Discord.Client();
 discordClient.configuration = require('./configuration.json');
 
-const Logger = require('./modules/logger');
-
-if (discordClient.configuration.environment == "development") {
-    require('dotenv').config;
-}
-
-discordClient.logger = new Logger({
-    enabled: discordClient.configuration.logger.enabled,
-    name: discordClient.configuration.name,
-    timestamp: discordClient.configuration.logger.timestamp
-});
-
-
 function Initialization(discordClient) {
-    discordClient.logger.log("Loading Events")
+    if (discordClient.configuration.environment == "development") {
+        require('dotenv').config();
+    }
+    
+    const Logger = require('./modules/logger');
+    discordClient.logger = new Logger({
+        enabled: discordClient.configuration.logger.enabled,
+        name: discordClient.configuration.botName,
+        image: discordClient.configuration.botImage,
+        timestamp: discordClient.configuration.logger.timestamp,
+        webhook: discordClient.configuration.logger.webhook
+    });
+    discordClient.logger.log(`Starting ${discordClient.configuration.botName}`)
 
+    discordClient.logger.log("Loading Events")
     let eventFolder = './events/';
     fileSystem.readdir(eventFolder, (error, eventFiles) => {
         if (error) return discordClient.logger.error(error);
@@ -34,6 +34,7 @@ function Initialization(discordClient) {
         });
     })
 
+    discordClient.logger.log("Loading Message Commands")
     let messageCommands = {};
     let messageCommandsFolder = "./messageCommands/";
     fileSystem.readdir(messageCommandsFolder, (error, messageCommandFiles) => {
@@ -54,8 +55,11 @@ function Initialization(discordClient) {
         })
     })
 
+    discordClient.logger.log("Loading Slash Commands")
     // Load SlashCommands
     // TODO: SlashCommands
 
-    client.login(process.env.CLIENT_TOKEN);
+    discordClient.login(process.env.CLIENT_TOKEN);
 }
+
+Initialization(discordClient);
