@@ -35,7 +35,7 @@ function Initialization(discordClient) {
     })
 
     discordClient.logger.log("Loading Message Commands")
-    let messageCommands = {};
+    discordClient.messageCommands = {};
     let messageCommandsFolder = "./messageCommands/";
     fileSystem.readdir(messageCommandsFolder, (error, messageCommandFiles) => {
         if (error) return discordClient.logger.error(error);
@@ -43,15 +43,15 @@ function Initialization(discordClient) {
             if (messageCommandFile.endsWith('.command.js')) {
                 discordClient.logger.log(`Loading Message Command from ${messageCommandFile}`);
                 let messageCommand = require(messageCommandFile + messageCommandFile);
-                messageCommands[messageCommand.identifier] = messageCommand;
+                discordClient.messageCommands[messageCommand.identifier] = messageCommand;
             }
         })
     });
     discordClient.on("message", (message) => {
         if (message.cleanContent.startsWith(discordClient.configuration.commandPrefix)) {
-            Object.keys(messageCommands).forEach(identifier => {
-                if (messageCommands[identifier].trigger(message.cleanContent)) {
-                    messageCommands[identifier].command(discordClient, message);
+            Object.keys(discordClient.messageCommands).forEach(identifier => {
+                if (discordClient.messageCommands[identifier].trigger(message.cleanContent)) {
+                    discordClient.messageCommands[identifier].command(discordClient, message);
                 }
             })
         }
