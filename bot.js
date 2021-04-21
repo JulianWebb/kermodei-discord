@@ -48,11 +48,14 @@ function Initialization(discordClient) {
         })
     });
     discordClient.on("message", (message) => {
-        Object.keys(messageCommands).forEach(identifier => {
-            if (messageCommands[identifier].trigger(message.cleanContent)) {
-                messageCommands[identifier].command(discordClient, message);
-            }
-        })
+        if (message.cleanContent.startsWith(discordClient.configuration.commandPrefix)) {
+            Object.keys(messageCommands).forEach(identifier => {
+                if (messageCommands[identifier].trigger(message.cleanContent)) {
+                    messageCommands[identifier].command(discordClient, message);
+                }
+            })
+        }
+        
     })
 
     discordClient.logger.log("Loading Slash Commands")

@@ -1,6 +1,7 @@
 {
     "botName" : "kermodei",
     "botImage" : "https://cdn.discordapp.com/avatars/576339091386269696/718e6a706715e45bae577a02b43df558.png?size=128",
+    "commandPrefix" : "$",
     "environment" : "development",
     "logger" : {
         "enabled" : true,
