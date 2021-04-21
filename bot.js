@@ -36,13 +36,13 @@ function Initialization(discordClient) {
 
     discordClient.logger.log("Loading Message Commands")
     discordClient.messageCommands = {};
-    let messageCommandsFolder = "./messageCommands/";
-    fileSystem.readdir(messageCommandsFolder, (error, messageCommandFiles) => {
+    let messageCommandFolder = "./messageCommands/";
+    fileSystem.readdir(messageCommandFolder, (error, messageCommandFiles) => {
         if (error) return discordClient.logger.error(error);
         messageCommandFiles.forEach(messageCommandFile => {
             if (messageCommandFile.endsWith('.command.js')) {
                 discordClient.logger.log(`Loading Message Command from ${messageCommandFile}`);
-                let messageCommand = require(messageCommandFile + messageCommandFile);
+                let messageCommand = require(messageCommandFolder + messageCommandFile);
                 discordClient.messageCommands[messageCommand.identifier] = messageCommand;
             }
         })
