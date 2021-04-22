@@ -1,6 +1,6 @@
 module.exports = {
     identifier: "listRoles",
-    permission: "MANAGE_USER",
+    permission: "MANAGE_ROLES",
     trigger: (testString) => /^roles.*/i.test(testString.slice(1)),
     command: (_, message) => {
         let rolesList = message.guild.roles.cache.reduce((accumulator, current) => {

@@ -24,6 +24,8 @@
                 "BAN_USER": {},
                 "RENAME_USER": {}
             },
+            "MANAGE_MESSAGE": {},
+            "MANAGE_ROLE": {},
             "BASIC": {
                 "USE_COMMANDS": {}
             }
@@ -31,7 +33,7 @@
     },
     "roleList" : {
         "823976574609129482" : ["ADMINISTRATOR"],
-        "834460687081144342" : ["MANAGE_USER", "BASIC"],
+        "834460687081144342" : ["MANAGE_USER", "MANAGE_MESSAGE", "MANAGE_ROLE", "BASIC"],
         "806374786779316244" : ["BASIC"]
     }    
 }
