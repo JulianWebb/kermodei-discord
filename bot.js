@@ -34,6 +34,9 @@ function Initialization(discordClient) {
         });
     })
 
+    let PermissionsManager = require('./modules/permissions');
+    discordClient.permissions = new PermissionsManager(discordClient.configuration.permissionTree, discordClient.configuration.roleList);
+
     discordClient.logger.log("Loading Message Commands")
     discordClient.messageCommands = {};
     let messageCommandFolder = "./messageCommands/";
@@ -51,7 +54,10 @@ function Initialization(discordClient) {
         if (message.cleanContent.startsWith(discordClient.configuration.commandPrefix)) {
             Object.keys(discordClient.messageCommands).forEach(identifier => {
                 if (discordClient.messageCommands[identifier].trigger(message.cleanContent)) {
-                    discordClient.messageCommands[identifier].command(discordClient, message);
+                    let canUse = message.member.roles.cache.some(role => {
+                        return discordClient.permissions.roleHasPermission(role.id, discordClient.messageCommands[identifier].permission);
+                    })
+                    if (canUse) discordClient.messageCommands[identifier].command(discordClient, message);
                 }
             })
         }

@@ -1,7 +1,8 @@
 module.exports = {
     identifier: "roll",
+    permission: "USE_COMMANDS",
     trigger: (testString) => /^roll\s\d+d\d+.*/i.test(testString.slice(1)),
-    command: (client, message) => {
+    command: (_, message) => {
         let values = /^roll\s(\d+)d(\d+).*/gi.exec(message.cleanContent.slice(1));
         let count = values[1];
         let sides = values[2];

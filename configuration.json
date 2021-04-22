@@ -1,6 +1,6 @@
 {
     "botName" : "kermodei",
-    "botImage" : "https://cdn.discordapp.com/avatars/576339091386269696/718e6a706715e45bae577a02b43df558.png?size=128",
+    "botImage" : "",
     "commandPrefix" : "$",
     "environment" : "development",
     "logger" : {
@@ -12,5 +12,26 @@
         "webhook" : {
             "enabled" : true
         }
-    }
+    },
+    "permissionTree" : {
+        "ADMINISTRATOR": {
+            "MANAGE_BOT": {
+                "CONFIGURE_BOT": {},
+                "SHUTDOWN_BOT": {}
+            },
+            "MANAGE_USER": {
+                "KICK_USER": {},
+                "BAN_USER": {},
+                "RENAME_USER": {}
+            },
+            "BASIC": {
+                "USE_COMMANDS": {}
+            }
+        }
+    },
+    "roleList" : {
+        "823976574609129482" : ["ADMINISTRATOR"],
+        "834460687081144342" : ["MANAGE_USER", "BASIC"],
+        "806374786779316244" : ["BASIC"]
+    }    
 }
