@@ -1,4 +1,3 @@
-let permissions = require('../modules/permissions');
 module.exports = {
     identifier: "listRoles",
     permission: "MANAGE_USER",
