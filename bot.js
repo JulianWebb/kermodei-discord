@@ -51,13 +51,20 @@ function Initialization(discordClient) {
         })
     });
     discordClient.on("message", (message) => {
+        if (discordClient.configuration.channelWhitelist && !discordClient.configuration.channelWhitelist.includes(message.channel.id)) return;
+        if (discordClient.configuration.channelBlacklist &&  discordClient.configuration.channelBlacklist.includes(message.channel.id)) return;
+
         if (message.cleanContent.startsWith(discordClient.configuration.commandPrefix)) {
             Object.keys(discordClient.messageCommands).forEach(identifier => {
-                if (discordClient.messageCommands[identifier].trigger(message.cleanContent)) {
+                let messageCommand = discordClient.messageCommands[identifier];
+                if (messageCommand.channelWhitelist && !messageCommand.channelWhitelist.includes(message.channel.id)) return;
+                if (messageCommand.channelBlacklist &&  messageCommand.channelBlacklist.includes(message.channel.id)) return;
+
+                if (messageCommand.trigger(message.cleanContent)) {
                     let canUse = message.member.roles.cache.some(role => {
-                        return discordClient.permissions.roleHasPermission(role.id, discordClient.messageCommands[identifier].permission);
+                        return discordClient.permissions.roleHasPermission(role.id, messageCommand.permission);
                     })
-                    if (canUse) discordClient.messageCommands[identifier].command(discordClient, message);
+                    if (canUse) messageCommand.command(discordClient, message);
                 }
             })
         }
