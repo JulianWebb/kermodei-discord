@@ -1,6 +1,8 @@
 module.exports = {
     identifier: "roll",
     permission: "USE_COMMANDS",
+    syntax: "roll [numberOfDice]d[numberofSides]",
+    description: "Use to roll a set of virtual dice. Uses only basic notation, e.g. (XdY).",
     trigger: (testString) => /^roll\s\d+d\d+.*/i.test(testString.slice(1)),
     command: (_, message) => {
         let values = /^roll\s(\d+)d(\d+).*/gi.exec(message.cleanContent.slice(1));
