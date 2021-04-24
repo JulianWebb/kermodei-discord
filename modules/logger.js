@@ -87,4 +87,9 @@ module.exports = class {
             this.print(`${this.logPrefix}[WARN]`, message);
         }
     }
+
+    fatalError(message, exitCode) {
+        this.error(message);
+        process.exit(exitCode ?? 1);
+    }
 }
