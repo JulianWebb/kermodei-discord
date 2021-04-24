@@ -31,6 +31,12 @@
             }
         }
     },
+    "database" : {
+        "type" : "sqlite3",
+        "options" : {
+            "file" : "database.sqlite"
+        }
+    },
     "roleList" : {
         "823976574609129482" : ["ADMINISTRATOR"],
         "834460687081144342" : ["MANAGE_USER", "MANAGE_MESSAGE", "MANAGE_ROLE", "BASIC"],

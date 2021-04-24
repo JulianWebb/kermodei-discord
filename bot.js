@@ -36,6 +36,23 @@ function Initialization(discordClient) {
 
     let PermissionsManager = require('./modules/permissions');
     discordClient.permissions = new PermissionsManager(discordClient.configuration.permissionTree, discordClient.configuration.roleList);
+    let DatabaseManager = require('./modules/databaseManager');
+    switch (discordClient.configuration.database.type) {
+        case "sqlite3":
+            try {
+                let Database = require('better-sqlite3');
+                discordClient.database = new DatabaseManager({
+                    type: discordClient.configuration.database.type,
+                    connection: new Database(discordClient.configuration.database.options.file)
+                })
+            } catch (error) {
+                discordClient.logger.fatalError("Database type configuration set to: SQLite3, however module could not be loaded.");
+            }
+        break;
+        default:
+            discordClient.logger.fatalError("Missing Database Type Configuration");
+
+    }
 
     discordClient.logger.log("Loading Message Commands")
     discordClient.messageCommands = {};
