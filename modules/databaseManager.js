@@ -1,11 +1,11 @@
 module.exports = class {
-    constructor(arguments) {
+    constructor(parameters) {
         let validTypes = ["sqlite3"];
-        this.type = arguments.type;
+        this.type = parameters.type;
         if (!validTypes.includes(this.type)) throw(`Invalid or Missing 'Type', valid types: ${validTypes}`)
         switch(this.type) {
             case "sqlite3":
-                this.database = new sqlite3(arguments.connection)
+                this.database = new sqlite3(parameters.connection)
             break;
         }
 
@@ -16,11 +16,11 @@ module.exports = class {
     }
 
     get(table, key) {
-        return this.database.get(table, key, value);
+        return this.database.get(table, key);
     }
 
     delete(table, key) {
-        return this.database.delete(table, key, value);
+        return this.database.delete(table, key);
     }    
 }
 
