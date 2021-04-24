@@ -8,7 +8,6 @@ module.exports = class {
                 this.database = new sqlite3(parameters.connection)
             break;
         }
-
     }
 
     set(table, key, value) {
@@ -32,35 +31,29 @@ class sqlite3 {
     set(table, key, value) {
         if (!this.tableExists(table)) this.createTable(table);
         if (this.get(table, key)) return this.update(table, key, value);
-        let statement = this.connection.prepare('INSERT INTO @table (key, value) VALUES (@key, @value);');
-        return statement.run({ table, key, value })
+        return this.connection.prepare(`INSERT INTO "${table}" VALUES ('${key}', '${value}');`).run();
     }
 
     get(table, key) {
         if (!this.tableExists(table)) return undefined;
-        let statement = this.connection.prepare('SELECT value FROM @table WHERE key=@key;');
-        return statement.get({ table, key });
+        return this.connection.prepare(`SELECT value FROM "${table}" WHERE key='${key}';`).get();
     }
 
     update(table, key, value) {
-        let statement = this.connection.prepare('UPDATE @table SET value=@value WHERE key=@key;');
-        return statement.run({ table, key, value });
+        return this.connection.prepare(`UPDATE "${table}" SET value='${value}' WHERE key='${key}';`).run();
     }
 
     delete(table, key) {
         if (!this.tableExists(table)) return undefined;
         if (!this.get(table, key)) return undefined;
-        let statement = this.connection.prepare('DELETE FROM @table WHERE key=@key;');
-        return statement.run({ table, key })
+        return this.connection.prepare(`DELETE FROM "${table}" WHERE key='${key}';`).run();
     }
 
     tableExists(table) {
-        let statement = this.connection.prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name=@table;`);
-        return statement.get({ table })? true: false;
+        return this.connection.prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name='${table}';`).get()? true: false;
     }
 
     createTable(table) {
-        let statement = this.connection.prepare('CREATE TABLE "@table" ( "key" TEXT NOT NULL UNIQUE, "value" TEXT NOT NULL, PRIMARY KEY("key"));');
-        return statement.run({ table });
+        return this.connection.prepare(`CREATE TABLE "${table}" ( "key" TEXT NOT NULL UNIQUE, "value" TEXT NOT NULL, PRIMARY KEY("key"));`).run();
     }
 }

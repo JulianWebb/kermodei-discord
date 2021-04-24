@@ -41,11 +41,13 @@ function Initialization(discordClient) {
         case "sqlite3":
             try {
                 let Database = require('better-sqlite3');
+                let database = new Database(discordClient.configuration.database.options.file);
                 discordClient.database = new DatabaseManager({
                     type: discordClient.configuration.database.type,
-                    connection: new Database(discordClient.configuration.database.options.file)
+                    connection: database
                 })
             } catch (error) {
+                discordClient.logger.error(error);
                 discordClient.logger.fatalError("Database type configuration set to: SQLite3, however module could not be loaded.");
             }
         break;
