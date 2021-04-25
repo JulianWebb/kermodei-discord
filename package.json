@@ -2,9 +2,10 @@
   "name": "kermodei-discord",
   "version": "0.1.0",
   "description": "A Discord Bot",
-  "main": "bot.js",
+  "main": "build/bot.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc && ./build/bot.js",
+    "mon": "nodemon npm start"
   },
   "keywords": [
     "Discord",
@@ -18,6 +19,10 @@
     "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "tweetnacl": "^1.0.3"
+    "tweetnacl": "^1.0.3",
+    "typescript": "^4.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.41"
   }
 }

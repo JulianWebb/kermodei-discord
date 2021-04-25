@@ -1,31 +1,55 @@
 const axios = require('axios');
 const Discord = require("discord.js");
 
-module.exports = class {
-    constructor(configuration) {
-        this.configuration = {};
-        this.configuration.enabled = configuration.enabled ?? true;
-        this.configuration.name = configuration.name ?? "LOGGER";
-        this.configuration.image = configuration.image ?? "";
-        this.configuration.timestamp = configuration.timestamp ?? {
-            enabled: true,
-            iso8601: true
-        };
-        this.configuration.webhook = {
-            enabled: configuration.webhook ?? false,
-            id: process.env.WEBHOOK_ID,
-            token: process.env.WEBHOOK_TOKEN
+class Logger {
+    configuration:{
+        enabled:boolean,
+        name:string,
+        timestamp:{
+            enabled:boolean,
+            iso8061:boolean
+        },
+        webhook:{
+            enabled:boolean,
+            id?:string|undefined,
+            token?:string|undefined
         }
+    };
+    webhookClient:any;
+
+    constructor(configuration:{ enabled?:boolean, name?:string, timestamp?:{ enabled?:boolean, iso8061?:boolean }, webhook?:{ enabled?: boolean, id?:string, token?:string}}) {  
+        this.configuration = {
+            enabled: configuration.enabled ?? true,
+            name: configuration.name ?? "LOGGER",
+            timestamp: configuration.timestamp? {
+                enabled: configuration.timestamp.enabled ?? true,
+                iso8061: configuration.timestamp.iso8061 ?? true,
+            } : {
+                enabled: true,
+                iso8061: true
+            },
+            webhook: configuration.webhook? {
+                enabled: configuration.webhook.enabled ?? false,
+                id: configuration.webhook.id,
+                token: configuration.webhook.token
+            } : {
+                enabled: false,
+                id: undefined,
+                token: undefined
+            }
+        };
+        
 
         if (this.configuration.webhook.enabled) {
             if (!this.configuration.webhook.id || !this.configuration.webhook.token) {
-                this.error("Missing Webhook Configuration");
+                throw("Missing Webhook Configuration");
+
             }
             this.webhookClient = new Discord.WebhookClient(this.configuration.webhook.id, this.configuration.webhook.token);
         }
     }
 
-    get timestamp() {
+    get timestamp():string {
         let now = new Date();
         let hour = now.getHours();
         let minute = now.getMinutes();
@@ -34,11 +58,11 @@ module.exports = class {
         return `[${stringHour}:${stringMinute}]`;
     }
 
-    get name() {
+    get name():string {
         return `[${this.configuration.name}]`;
     }
 
-    webhookPrint(message) {
+    webhookPrint(message:string|string[]):void {
         if (this.configuration.webhook.enabled) {
             if (typeof message == "string") {
                 return this.webhookClient.send(message);
@@ -46,14 +70,13 @@ module.exports = class {
             if (Array.isArray(message)) {
                 return this.webhookClient.send(message.reduce((accumulator, current) => accumulator + " " + current, ""), {
                     username: this.configuration.name,
-                    avatarUrl: this.configuration.image,
                     split: true
                 })
             }
         }
     }
 
-    print(prefix, message) {
+    print(prefix:string, message:string|string[]):void {
         if (this.configuration.enabled) {
             if (Array.isArray(message)) {
                 message.unshift(prefix);
@@ -67,29 +90,32 @@ module.exports = class {
         }
     }
 
-    get logPrefix() {
+    get logPrefix():string {
         return this.configuration.timestamp.enabled? `${this.timestamp}${this.name}`: this.name;
     }
-    log(message) {
+
+    log(message:string|string[]):void {
         if (this.configuration.enabled) {
             this.print(this.logPrefix, message);
         }
     }
     
-    error(message) {
+    error(message:string|string[]):void {
         if (this.configuration.enabled) {
             this.print(`${this.logPrefix}[ERROR]`, message);
         }
     }
 
-    warn(message) {
+    warn(message:string|string[]):void {
         if (this.configuration.enabled) {
             this.print(`${this.logPrefix}[WARN]`, message);
         }
     }
 
-    fatalError(message, exitCode) {
+    fatalError(message:string|string[], exitCode:number):void {
         this.error(message);
         process.exit(exitCode ?? 1);
     }
 }
+
+module.exports = Logger;

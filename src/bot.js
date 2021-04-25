@@ -4,7 +4,7 @@ const express = require('express');
 
 const Discord = require('discord.js');
 const discordClient = new Discord.Client();
-discordClient.configuration = require('./configuration.json');
+discordClient.configuration = require('../configuration.json');
 
 function Initialization(discordClient) {
     if (discordClient.configuration.environment == "development") {
@@ -17,12 +17,16 @@ function Initialization(discordClient) {
         name: discordClient.configuration.botName,
         image: discordClient.configuration.botImage,
         timestamp: discordClient.configuration.logger.timestamp,
-        webhook: discordClient.configuration.logger.webhook
+        webhook: {
+            enabled: discordClient.configuration.logger.webhook.enabled,
+            id: process.env.WEBHOOK_ID,
+            token: process.env.WEBHOOK_TOKEN
+        }
     });
     discordClient.logger.log(`Starting ${discordClient.configuration.botName}`)
 
     discordClient.logger.log("Loading Events")
-    let eventFolder = './events/';
+    let eventFolder = __dirname + '/events/';
     fileSystem.readdir(eventFolder, (error, eventFiles) => {
         if (error) return discordClient.logger.error(error);
         eventFiles.forEach(eventFile => {
@@ -58,7 +62,7 @@ function Initialization(discordClient) {
 
     discordClient.logger.log("Loading Message Commands")
     discordClient.messageCommands = {};
-    let messageCommandFolder = "./messageCommands/";
+    let messageCommandFolder = __dirname +  "/messageCommands/";
     fileSystem.readdir(messageCommandFolder, (error, messageCommandFiles) => {
         if (error) return discordClient.logger.error(error);
         messageCommandFiles.forEach(messageCommandFile => {
