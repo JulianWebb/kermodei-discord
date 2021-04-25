@@ -72,6 +72,8 @@ function Initialization(discordClient) {
     discordClient.on("message", (message) => {
         if (discordClient.configuration.channelWhitelist && !discordClient.configuration.channelWhitelist.includes(message.channel.id)) return;
         if (discordClient.configuration.channelBlacklist &&  discordClient.configuration.channelBlacklist.includes(message.channel.id)) return;
+        if (message.author.id == discordClient.user.id) return;
+        if (message.webhookID == process.env.WEBHOOK_ID) return;
 
         if (message.cleanContent.startsWith(discordClient.configuration.commandPrefix)) {
             Object.keys(discordClient.messageCommands).forEach(identifier => {
